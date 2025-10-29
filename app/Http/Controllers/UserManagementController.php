@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
+
 class UserManagementController extends Controller
 {
     /** Index page */
@@ -182,6 +183,8 @@ class UserManagementController extends Controller
         $users = DB::table('users')->get();
         $employeeProfile = DB::table('profile_information')->where('user_id', $profile)->first();
         $userfamilyinfo = DB::table('user_family_info')->where('user_id', $profile)->get();
+        $userEducation = DB::table('user_education')->where('user_id', $profile)->get();
+        $userExperiences = DB::table('user_experiences')->where('user_id', $profile)->get();
 
         if ($employeeProfile) {
             return view('usermanagement.profile_user', [
@@ -190,14 +193,18 @@ class UserManagementController extends Controller
                 'userInformation'   => $userInformation,
                 'emergencyContact'  => $emergencyContact,
                 'bankInformation'   => $bankInformation,
-                'userfamilyinfo'    => $userfamilyinfo
+                'userfamilyinfo'    => $userfamilyinfo,
+                'userEducation'     => $userEducation,
+                'userExperiences'   => $userExperiences
             ]);
         } else {
             return view('usermanagement.profile_user', [
                 'information'       => null,
                 'user'              => $users,
                 'userInformation'   => $userInformation,
-                'userfamilyinfo'    => $userfamilyinfo
+                'userfamilyinfo'    => $userfamilyinfo,
+                'userEducation'     => $userEducation,
+                'userExperiences'   => $userExperiences
             ]);
         }
     }

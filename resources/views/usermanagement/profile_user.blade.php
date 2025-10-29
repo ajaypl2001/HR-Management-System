@@ -398,89 +398,197 @@
 
                     </div>
                     <div class="row">
+                            <div class="col-md-6 d-flex">
+                                <div class="card profile-box flex-fill">
+                                    <div class="card-body">
+                                        <h3 class="card-title">
+                                            Education Information
+                                            <a href="#" class="edit-icon" data-toggle="modal" data-target="#education_info">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        </h3>
+
+                                        <div class="experience-box">
+                                            <ul class="experience-list">
+                                                @forelse ($userEducation as $education)
+                                                    <li>
+                                                        <div class="experience-user">
+                                                            <div class="before-circle"></div>
+                                                        </div>
+                                                        <div class="experience-content">
+                                                            <div class="timeline-content">
+                                                                <a href="javascript:void(0);" 
+                                                                        class="name text-capitalize editEducationBtn" 
+                                                                        data-id="{{ $education->id }}"
+                                                                        data-institution="{{ $education->institution }}"
+                                                                        data-subject="{{ $education->subject }}"
+                                                                        data-degree="{{ $education->degree }}"
+                                                                        data-grade="{{ $education->grade }}"
+                                                                        data-start="{{ $education->start_date }}"
+                                                                        data-end="{{ $education->end_date }}">
+                                                                    {{ $education->institution ?? 'Unknown Institution' }}
+                                                                    @if(!empty($education->subject))
+                                                                        <small class="text-muted">({{ $education->subject }})</small>
+                                                                    @endif
+                                                                </a>
+
+                                                                @if(!empty($education->degree))
+                                                                    <div><strong>Degree:</strong> {{ $education->degree }}</div>
+                                                                @endif
+
+                                                                @if(!empty($education->grade))
+                                                                    <div><strong>Grade:</strong> {{ $education->grade }}</div>
+                                                                @endif
+
+                                                                <span class="time">
+                                                                    @php
+                                                                        $start = $education->start_date ? \Carbon\Carbon::parse($education->start_date)->format('Y') : 'N/A';
+                                                                        $end   = $education->end_date ? \Carbon\Carbon::parse($education->end_date)->format('Y') : 'N/A';
+                                                                    @endphp
+                                                                    {{ $start }} - {{ $end }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                @empty
+                                                    <li>
+                                                        <div class="timeline-content text-muted">
+                                                            No education records found.
+                                                        </div>
+                                                    </li>
+                                                @endforelse
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Education Informations <a href="#" class="edit-icon" data-toggle="modal" data-target="#education_info"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">
+                                        Experience 
+                                        <a href="#" class="edit-icon" data-toggle="modal" data-target="#experience_info">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </h3>
+
                                     <div class="experience-box">
                                         <ul class="experience-list">
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">International College of Arts and Science (UG)</a>
-                                                        <div>Bsc Computer Science</div>
-                                                        <span class="time">2000 - 2003</span>
+                                            @forelse ($userExperiences as $experience)
+                                                <li>
+                                                    <div class="experience-user">
+                                                        <div class="before-circle"></div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">International College of Arts and Science (PG)</a>
-                                                        <div>Msc Computer Science</div>
-                                                        <span class="time">2000 - 2003</span>
+                                                    <div class="experience-content">
+                                                        <div class="timeline-content">
+                                                            <a href="#/" class="name">
+                                                                {{ $experience->job_position }} at {{ $experience->company_name }}
+                                                            </a>
+                                                            <span class="time">
+                                                                {{ \Carbon\Carbon::parse($experience->period_from)->format('M Y') }}
+                                                                -
+                                                                {{ $experience->period_to ? \Carbon\Carbon::parse($experience->period_to)->format('M Y') : 'Present' }}
+                                                            </span>
+                                                            <br>
+                                                            <small class="text-muted">
+                                                                {{ $experience->location }}
+                                                            </small>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @empty
+                                                <li>
+                                                    <div class="timeline-content">
+                                                        <span class="text-muted">No experience records found.</span>
+                                                    </div>
+                                                </li>
+                                            @endforelse
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 d-flex">
-                            <div class="card profile-box flex-fill">
-                                <div class="card-body">
-                                    <h3 class="card-title">Experience <a href="#" class="edit-icon" data-toggle="modal" data-target="#experience_info"><i class="fa fa-pencil"></i></a></h3>
-                                    <div class="experience-box">
-                                        <ul class="experience-list">
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Zen Corporation</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Ron-tech</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Dalt Technology</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <!-- /Profile Info Tab -->
+            <!-- education edit modal -->
+            <div id="editEducationModal" class="modal custom-modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Education Information</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                     
+                        <div class="modal-body">
+                            <form id="editEducationForm" method="POST">
+                                @csrf
+                                <input type="hidden" name="education_id" id="education_id">
+                                <input type="hidden" name="user_id" value="{{ Session::get('user_id') }}">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Institution <span class="text-danger">*</span></label>
+                                            <input type="text" name="institution" id="institution" class="form-control floating">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Subject</label>
+                                            <input type="text" name="subject" id="subject" class="form-control floating">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Start Date</label>
+                                            <div class="cal-icon">
+                                                <input type="text" name="start_date" id="start_date" class="form-control floating datetimepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Completion Date</label>
+                                            <div class="cal-icon">
+                                                <input type="text" name="end_date" id="end_date" class="form-control floating datetimepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Degree</label>
+                                            <input type="text" name="degree" id="degree" class="form-control floating">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Grade</label>
+                                            <input type="text" name="grade" id="grade" class="form-control floating">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="submit-section text-right">
+                                    <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- end education edit modale html code -->
                 <!-- Projects Tab -->
                 <div class="tab-pane fade" id="emp_projects">
                     <div class="row">
@@ -1939,112 +2047,95 @@
         
         <!-- Experience Modal -->
         <div id="experience_info" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Experience Informations</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Experience Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Digital Devlopment Inc">
-                                                    <label class="focus-label">Company Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="United States">
-                                                    <label class="focus-label">Location</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Web Developer">
-                                                    <label class="focus-label">Job Position</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="01/07/2007">
-                                                    </div>
-                                                    <label class="focus-label">Period From</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="08/06/2018">
-                                                    </div>
-                                                    <label class="focus-label">Period To</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Experience Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Digital Devlopment Inc">
-                                                    <label class="focus-label">Company Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="United States">
-                                                    <label class="focus-label">Location</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Web Developer">
-                                                    <label class="focus-label">Job Position</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="01/07/2007">
-                                                    </div>
-                                                    <label class="focus-label">Period From</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="08/06/2018">
-                                                    </div>
-                                                    <label class="focus-label">Period To</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Experience Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+
+                <div class="modal-body">
+                    <form id="experienceForm" action="{{ route('saveExprience') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ Session::get('user_id') }}">
+
+                        <div class="form-scroll" id="experienceContainer">
+
+                            <div class="card experience-card d-none" id="experienceTemplate">
+                                <div class="card-body">
+                                    <h3 class="card-title">
+                                        Experience Information <span class="exp-count"></span>
+                                        <a href="javascript:void(0);" class="delete-icon text-danger float-right remove-experience">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </h3>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-focus my-3">
+                                                <label>Company Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control floating" name="company_name[]" placeholder="Enter Company Name">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-focus my-3">
+                                                <label>Location <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control floating" name="location[]" placeholder="Enter Location">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-focus my-3">
+                                                <label>Job Position <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control floating" name="job_position[]" placeholder="Enter Job Position">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-focus my-3">
+                                                <label>Period From</label>
+                                                <div class="cal-icon">
+                                                    <input type="text" name="period_from[]" class="form-control floating datetimepicker" placeholder="Select Start Date">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-focus my-3">
+                                                <label>Period To</label>
+                                                <div class="cal-icon">
+                                                    <input type="text" class="form-control floating datetimepicker" name="period_to[]" placeholder="Select End Date">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Template -->
+
+                        </div>
+
+                        <div class="add-more text-left my-3">
+                            <a href="javascript:void(0);" id="addMoreExperience">
+                                <i class="fa fa-plus-circle"></i> Add More
+                            </a>
+                        </div>
+
+                        <div class="submit-section text-right">
+                            <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
             </div>
         </div>
+    </div>
         <!-- /Experience Modal -->
 
     <!-- /Page Content -->
@@ -2111,34 +2202,27 @@
 
 <script>
 $(document).ready(function() {
-    let contactCount = 2; // since we have Primary (1) + Secondary (2)
+    let contactCount = 2; 
 
-    // Add More Functionality
     $('#addMore').click(function() {
         contactCount++;
 
-        // Clone the last card
         let newCard = $('.contact-card').last().clone();
 
-        // Clear input values
         newCard.find('input').val('');
 
-        // Update heading
         newCard.find('.card-title').html(
             'Contact ' + contactCount + 
             ' <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a>'
         );
 
-        // Append new card
         $('#contact-container').append(newCard);
     });
 
-    // Delete Functionality
     $(document).on('click', '.delete-icon', function() {
         if ($('.contact-card').length > 1) {
             $(this).closest('.contact-card').remove();
 
-            // Re-label remaining cards
             $('.contact-card').each(function(index) {
                 let title = index === 0 ? 'Primary Contact' : 'Contact ' + (index + 1);
                 $(this).find('.card-title').html(
@@ -2157,25 +2241,21 @@ $(document).ready(function() {
 $(document).on('click', '.editFamilyBtn', function (e) {
     e.preventDefault();
 
-    // Get data from clicked button
     let id = $(this).data('id');
     let name = $(this).data('name');
     let relationship = $(this).data('relationship');
     let dob = $(this).data('dob');
     let phone = $(this).data('phone');
 
-    // Fill modal fields
     $('#family_id').val(id);
     $('#edit_name').val(name);
     $('#edit_relationship').val(relationship);
     $('#edit_dob').val(dob);
     $('#edit_phone').val(phone);
 
-    // Update form action dynamically
     let actionUrl = "{{ url('user-edit-family/information/save') }}/" + id;
     $('#familyEditForm').attr('action', actionUrl);
 
-    // Open the modal
     $('#family_edit_modal').modal('show');
 });
 </script>
@@ -2231,9 +2311,77 @@ $(document).on('click', '.editFamilyBtn', function (e) {
             updateEducationCount();
         });
 
+        $(document).on('click', '.editEducationBtn', function () {
+            const modal = $('#editEducationModal');
+
+            $('#education_id').val($(this).data('id'));
+            $('#institution').val($(this).data('institution'));
+            $('#subject').val($(this).data('subject'));
+            $('#degree').val($(this).data('degree'));
+            $('#grade').val($(this).data('grade'));
+            $('#start_date').val($(this).data('start'));
+            $('#end_date').val($(this).data('end'));
+
+            modal.modal('show');
+        });
+
         updateEducationCount();
     });
 </script>
+
+
+<script>
+    $(document).ready(function () {
+        const container = $("#experienceContainer");
+        const template = $("#experienceTemplate");
+        template.find("input, select, textarea").prop("disabled", true);
+
+        function initDatePickers(context) {
+            context.find('.datetimepicker').datetimepicker({
+                format: 'DD-MM-YYYY',
+                icons: {
+                    up: "fa fa-angle-up",
+                    down: "fa fa-angle-down",
+                    next: 'fa fa-angle-right',
+                    previous: 'fa fa-angle-left'
+                }
+            });
+        }
+
+        function addExperience(removable = true) {
+            const newBlock = template.clone().removeClass('d-none').removeAttr('id');
+            newBlock.find("input, select, textarea").prop("disabled", false);
+
+            if (!removable) {
+                newBlock.find('.remove-experience').remove();
+            }
+
+            container.append(newBlock);
+            initDatePickers(newBlock);
+            updateExperienceNumbers();
+        }
+
+        function updateExperienceNumbers() {
+            container.find('.experience-card:not(#experienceTemplate)').each(function (index) {
+                $(this).find('.exp-count').text(index + 1);
+            });
+        }
+
+        addExperience(false);
+
+        $("#addMoreExperience").click(function () {
+            addExperience(true);
+        });
+
+        $(document).on('click', '.remove-experience', function () {
+            $(this).closest('.experience-card').remove();
+            updateExperienceNumbers();
+        });
+
+        initDatePickers($(document));
+    });
+</script>
+
 
     @endsection
 @endsection

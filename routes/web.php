@@ -319,6 +319,8 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
             Route::post('user-edit-family/information/save/{id}', 'saveEditfamilyRecord')->name('user-edit-family/information/save');
             Route::delete('user-family/information/delete/{id}', 'deleteFamilyRecord');
             Route::post('user/education/', 'saveEducation')->name('saveEducation');
+            Route::post('user/education/edit/{id}', 'editEducation')->name('editEducation');
+            Route::post('user/exprience/edit/save', 'saveExprience')->name('saveExprience');
         });
     });
 

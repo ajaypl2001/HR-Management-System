@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\UserFamilyInfo;
 use Svg\Tag\Rect;
 use App\Models\UserEducation;
+use App\Models\UserExperience;
 
 use Brian2694\Toastr\Facades\Toastr;
 
@@ -162,5 +163,57 @@ class PersonalInformationController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+
+    public function editEducation(Request $request, $id)
+    {
+        $request->validate([
+            'institution' => 'required|string|max:255',
+            'subject' => 'nullable|string|max:255',
+            'start_date' => 'nullable|string',
+            'end_date' => 'nullable|string',
+            'degree' => 'nullable|string|max:255',
+            'grade' => 'nullable|string|max:255',
+        ]);
+
+        $education = UserEducation::findOrFail($id);
+        $education->update($request->only(['institution', 'subject', 'start_date', 'end_date', 'degree', 'grade']));
+
+        return back()->with('success', 'Education record updated successfully.');
+    }
+
+
+    public function saveExprience(Request $request)
+    {
+        $request->validate([
+            'user_id'       => 'required',
+            'company_name'  => 'required|array',
+            'location'      => 'required|array',
+            'job_position'  => 'required|array',
+            'period_from'   => 'required|array',
+            'period_to'     => 'required|array',
+        ]);
+
+        // Optional: clear old experiences before adding new ones
+        // UserExperience::where('user_id', $request->user_id)->delete();
+
+        foreach ($request->company_name as $index => $company) {
+            if (!$company || !$request->job_position[$index]) {
+                continue;
+            }
+
+            UserExperience::create([
+                'user_id'       => $request->user_id,
+                'company_name'  => $company,
+                'location'      => $request->location[$index] ?? null,
+                'job_position'  => $request->job_position[$index],
+                'period_from'   => \Carbon\Carbon::createFromFormat('d-m-Y', $request->period_from[$index])->format('Y-m-d'),
+                'period_to'     => \Carbon\Carbon::createFromFormat('d-m-Y', $request->period_to[$index])->format('Y-m-d'),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Experience details saved successfully!');
+    }
+
 
 }

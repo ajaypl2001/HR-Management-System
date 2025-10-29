@@ -28,7 +28,7 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label>New Password</label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Enter Password">
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -37,7 +37,7 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label><strong>Repeat Password</strong></label>
+                                <label><strong>Confirm Password</strong></label>
                                 <input type="password" class="form-control" name="password_confirmation" placeholder="Choose Repeat Password">
                             </div>
                             <div class="form-group text-center">
