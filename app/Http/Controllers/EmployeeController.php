@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\department;
 use App\Models\Employee;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
