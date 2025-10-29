@@ -1795,112 +1795,142 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+               
                     <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
+                        <form id="educationForm" action="{{ route('saveEducation') }}" method="POST">
+                            @csrf
+                            <input type="hidden" class="form-control" name="user_id" value="{{  Session::get('user_id') }}">
+                            <div class="form-scroll" id="educationContainer">
+
+                                <div class="card education-card">
                                     <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
+                                        <h3 class="card-title">
+                                            Education Information <span class="edu-count">1</span>
+                                        </h3>
                                         <div class="row">
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Oxford University" class="form-control floating">
-                                                    <label class="focus-label">Institution</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Institution <span class="text-danger">*</span></label>
+                                                    <input type="text" name="institution[]" class="form-control floating" placeholder="Enter Institution Name">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Subject</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Subject <span class="text-danger">*</span></label>
+                                                    <input type="text" name="subject[]" class="form-control floating" placeholder="Enter Subject">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Start Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="01/06/2002" class="form-control floating datetimepicker">
+                                                        <input type="text" name="start_date[]" class="form-control floating datetimepicker" placeholder="Select Start Date">
                                                     </div>
-                                                    <label class="focus-label">Starting Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Completion Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="31/05/2006" class="form-control floating datetimepicker">
+                                                        <input type="text" name="end_date[]" class="form-control floating datetimepicker" placeholder="Select Completion Date">
                                                     </div>
-                                                    <label class="focus-label">Complete Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="BE Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Degree</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Degree</label>
+                                                    <input type="text" name="degree[]" class="form-control floating" placeholder="Enter Degree">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Grade A" class="form-control floating">
-                                                    <label class="focus-label">Grade</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Grade</label>
+                                                    <input type="text" name="grade[]" class="form-control floating" placeholder="Enter Grade">
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="card">
+
+                                <div class="card education-card">
                                     <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
+                                        <h3 class="card-title">
+                                            Education Information <span class="edu-count">2</span>
+                                            <a href="javascript:void(0);" class="delete-icon text-danger float-right">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </h3>
                                         <div class="row">
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Oxford University" class="form-control floating">
-                                                    <label class="focus-label">Institution</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Institution <span class="text-danger">*</span></label>
+                                                    <input type="text" name="institution[]" class="form-control floating" placeholder="Enter Institution Name">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Subject</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Subject <span class="text-danger">*</span></label>
+                                                    <input type="text" name="subject[]" class="form-control floating" placeholder="Enter Subject">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Start Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="01/06/2002" class="form-control floating datetimepicker">
+                                                        <input type="text" name="start_date[]" class="form-control floating datetimepicker" placeholder="Select Start Date">
                                                     </div>
-                                                    <label class="focus-label">Starting Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Completion Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="31/05/2006" class="form-control floating datetimepicker">
+                                                        <input type="text" name="end_date[]" class="form-control floating datetimepicker" placeholder="Select Completion Date">
                                                     </div>
-                                                    <label class="focus-label">Complete Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="BE Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Degree</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Degree</label>
+                                                    <input type="text" name="degree[]" class="form-control floating" placeholder="Enter Degree">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Grade A" class="form-control floating">
-                                                    <label class="focus-label">Grade</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Grade</label>
+                                                    <input type="text" name="grade[]" class="form-control floating" placeholder="Enter Grade">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
+
+                            <div class="add-more text-left my-3">
+                                <a href="javascript:void(0);" id="addMoreEdu">
+                                    <i class="fa fa-plus-circle"></i> Add More
+                                </a>
+                            </div>
+
+                            <div class="submit-section text-right">
+                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -2152,30 +2182,57 @@ $(document).on('click', '.editFamilyBtn', function (e) {
 
 
 <script>
-$(document).on('click', '.deleteFamilyBtn', function (e) {
-    e.preventDefault();
-    if (!confirm('Are you sure you want to delete this family record?')) return;
+    $(document).on('click', '.deleteFamilyBtn', function (e) {
+        e.preventDefault();
+        if (!confirm('Are you sure you want to delete this family record?')) return;
 
-    let id = $(this).data('id');
+        let id = $(this).data('id');
 
-    $.ajax({
-        url: "{{ url('user-family/information/delete') }}/" + id,
-        type: "POST",
-        data: {
-            _token: "{{ csrf_token() }}",
-            _method: "DELETE"
-        },
-        success: function (response) {
-            alert(response.message);
-            location.reload();
-        },
-        error: function (xhr) {
-            console.log(xhr.responseText);
-            alert('Error deleting record.');
-        }
+        $.ajax({
+            url: "{{ url('user-family/information/delete') }}/" + id,
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                _method: "DELETE"
+            },
+            success: function (response) {
+                alert(response.message);
+                location.reload();
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+                alert('Error deleting record.');
+            }
+        });
     });
-});
+</script>
 
+
+
+<script>
+    $(document).ready(function() {
+
+        function updateEducationCount() {
+            $('#educationContainer .education-card').each(function(index) {
+                $(this).find('.edu-count').text(index + 1);
+            });
+        }
+
+        $('#addMoreEdu').on('click', function() {
+            let newEdu = $('#educationContainer .education-card:first').clone();
+            newEdu.find('input').val(''); 
+            newEdu.find('.card-title').append('<a href="javascript:void(0);" class="delete-icon text-danger float-right"><i class="fa fa-trash-o"></i></a>');
+            $('#educationContainer').append(newEdu);
+            updateEducationCount();
+        });
+
+        $(document).on('click', '.delete-icon', function() {
+            $(this).closest('.education-card').remove();
+            updateEducationCount();
+        });
+
+        updateEducationCount();
+    });
 </script>
 
     @endsection

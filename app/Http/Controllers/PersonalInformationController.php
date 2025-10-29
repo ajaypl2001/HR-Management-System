@@ -6,7 +6,10 @@ use App\Models\PersonalInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserFamilyInfo;
-use Toastr;
+use Svg\Tag\Rect;
+use App\Models\UserEducation;
+
+use Brian2694\Toastr\Facades\Toastr;
 
 class PersonalInformationController extends Controller
 {
@@ -128,9 +131,36 @@ class PersonalInformationController extends Controller
             $family->delete();
 
             return response()->json(['success' => true, 'message' => 'Family record deleted successfully!']);
-
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error deleting record.', 'error' => $e->getMessage()], 500);
         }
     }
+
+
+    public function saveEducation(Request $request)
+    {
+        
+        DB::beginTransaction();
+
+        try {
+            foreach ($request->institution as $index => $institution) {
+                UserEducation::create([
+                    'user_id'     => $request->user_id,
+                    'institution' => $institution,
+                    'subject'     => $request->subject[$index] ?? null,
+                    'start_date'  => $request->start_date[$index] ?? null,
+                    'end_date'    => $request->end_date[$index] ?? null,
+                    'degree'      => $request->degree[$index] ?? null,
+                    'grade'       => $request->grade[$index] ?? null,
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Education details saved successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 }
