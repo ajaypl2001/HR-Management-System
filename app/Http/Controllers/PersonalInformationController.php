@@ -184,6 +184,7 @@ class PersonalInformationController extends Controller
         return back()->with('success', 'Education record updated successfully.');
     }
 
+    /* exprience */
 
     public function saveExprience(Request $request)
     {
