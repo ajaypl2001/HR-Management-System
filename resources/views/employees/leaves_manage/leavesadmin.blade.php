@@ -18,7 +18,7 @@
     </style>
     <!-- Page Wrapper -->
     <div class="page-wrapper">
-        <!-- Page Content -->
+        <!-- Page Content --
         <div class="content container-fluid">
             <!-- Page Header -->
             <div class="page-header">
@@ -138,7 +138,7 @@
                             <tbody>
                                 @if(!empty($getLeave))
                                     @foreach ($getLeave as $items )
-                                        @php // get photo from the table users
+                                        @php
                                             $profiles  = DB::table('users')->where('name', $items->employee_name)->get();
                                         @endphp
                                         <tr>
@@ -168,7 +168,13 @@
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a>
                                                         <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a>
-                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#approve_leave"><i class="fa fa-dot-circle-o text-success"></i> Approved</a>
+                                                        <a class="dropdown-item approveLeaveBtn" 
+                                                            href="#" 
+                                                            data-id="{{ $items->id }}" 
+                                                            data-toggle="modal" 
+                                                            data-target="#approve_leave">
+                                                            <i class="fa fa-dot-circle-o text-success"></i> Approved
+                                                        </a>
                                                         <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a>
                                                     </div>
                                                 </div>
@@ -177,8 +183,23 @@
                                                 <div class="dropdown dropdown-action">
                                                     <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item leaveUpdate" data-toggle="modal" data-id="'.$items->id.'" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                        <a class="dropdown-item leaveDelete" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                        <a class="dropdown-item leaveUpdate"
+                                                            href="javascript:void(0);"
+                                                            data-id="{{ $items->id }}"
+                                                            data-employee_name="{{ $items->employee_name }}"
+                                                            data-employee_id="{{ $items->staff_id }}"
+                                                            data-leave_type="{{ $items->leave_type }}"
+                                                            data-remaining_leave="{{ $items->remaining_leave }}"
+                                                            data-date_from="{{ $items->date_from }}"
+                                                            data-date_to="{{ $items->date_to }}"
+                                                            data-number_of_day="{{ $items->number_of_day }}"
+                                                            data-leave_day="{{ $items->leave_day }}"
+                                                            data-reason="{{ $items->reason }}"
+                                                            data-toggle="modal"
+                                                            data-target="#edit_leave">
+                                                            <i class="fa fa-pencil m-r-5"></i> Edit
+                                                        </a>
+                                                        <a class="dropdown-item leaveDelete" href="#" data-toggle="modal" data-id="{{ $items->id }}"  data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -304,32 +325,140 @@
         <!-- /Add Leave Modal -->
 				
         <!-- Edit Leave Modal -->
-       
+       <div id="edit_leave" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Leave</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="updateLeaveForm" action="{{ route('form/leaves/update') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" id="edit_id">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Employee Name <span class="text-danger">*</span></label>
+                                        <select class="select select2s-hidden-accessible" id="edit_employee_name" name="employee_name">
+                                            <option value="">-- Select --</option>
+                                            @foreach ($userList as $key => $user)
+                                                <option value="{{ $user->name }}" data-employee_id="{{ $user->user_id }}">{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Employee ID<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="edit_employee_id" name="employee_id" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Leave Type <span class="text-danger">*</span></label>
+                                        <select class="select" id="edit_leave_type" name="leave_type">
+                                            <option selected disabled>Select Leave Type</option>
+                                            @foreach($leaveInformation as $key => $leaves)
+                                                @if($leaves->leave_type != 'Total Leave Balance' && $leaves->leave_type != 'Use Leave' && $leaves->leave_type != 'Remaining Leave')   
+                                                    <option value="{{ $leaves->leave_type }}">{{ $leaves->leave_type }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Remaining Leaves <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="edit_remaining_leave" name="remaining_leave" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>From <span class="text-danger">*</span></label>
+                                        <div class="cal-icon">
+                                            <input type="text" class="form-control datetimepicker" id="edit_date_from" name="date_from" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>To <span class="text-danger">*</span></label>
+                                        <div class="cal-icon">
+                                            <input type="text" class="form-control datetimepicker" id="edit_date_to" name="date_to" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+
+                            <div class="form-group">
+                                <label>Number of days <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_number_of_day" name="number_of_day" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Leave Day <span class="text-danger">*</span></label>
+                                <select class="select" name="select_leave_day[]" id="edit_leave_day">
+                                    <option value="Full-Day Leave">Full-Day Leave</option>
+                                    <option value="Half-Day Morning Leave">Half-Day Morning Leave</option>
+                                    <option value="Half-Day Afternoon Leave">Half-Day Afternoon Leave</option>
+                                    <option value="Public Holiday">Public Holiday</option>
+                                    <option value="Off Schedule">Off Schedule</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Leave Reason <span class="text-danger">*</span></label>
+                                <textarea rows="2" class="form-control" id="edit_reason" name="reason"></textarea>
+                            </div>
+
+                            <div class="submit-section">
+                                <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- /Edit Leave Modal -->
 
         <!-- Approve Leave Modal -->
-        <div class="modal custom-modal fade" id="approve_leave" role="dialog">
+       <div class="modal custom-modal fade" id="approve_leave" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-header">
-                            <h3>Leave Approve</h3>
-                            <p>Are you sure want to approve for this leave?</p>
+                            <h3>Approve Leave</h3>
+                            <p>Are you sure want to approve this leave?</p>
                         </div>
                         <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Approve</a>
+                            <form id="approveLeaveForm" method="POST" action="{{ route('leave.approve') }}">
+                                @csrf
+                                <input type="hidden" name="id" id="leave_id" value="">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-primary continue-btn approve-btn">Approve</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Decline</a>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- /Approve Leave Modal -->
         
         <!-- Delete Leave Modal -->
@@ -573,8 +702,83 @@
                 $(this).siblings('span.error').toggle(!$(this).val());
             });
         });
+
+
+        $(document).on('click', '.leaveDelete', function() {
+            var id = $(this).data('id');
+            $('.e_id').val(id);
+        });
     </script>
     
+    <script>
+        $(document).ready(function() {
+            $('.approveLeaveBtn').on('click', function() {
+                var leaveId = $(this).data('id');
+                $('#leave_id').val(leaveId);
+            });
 
+            $('.continue-btn').on('click', function() {
+                var leaveId = $('#leave_id').val();
+
+                $.ajax({
+                    url: "{{ route('leave.approve') }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: leaveId
+                    },
+                    success: function(response) {
+                        $('#approve_leave').modal('hide');
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Something went wrong. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+        $(document).on('click', '.leaveUpdate', function() {
+            $('#edit_id').val($(this).data('id'));
+            $('#edit_employee_name').val($(this).data('employee_name'));
+            $('#edit_employee_id').val($(this).data('employee_id'));
+            $('#edit_leave_type').val($(this).data('leave_type'));
+            $('#edit_remaining_leave').val($(this).data('remaining_leave'));
+            $('#edit_date_from').val($(this).data('date_from'));
+            $('#edit_date_to').val($(this).data('date_to'));
+            $('#edit_number_of_day').val($(this).data('number_of_day'));
+            $('#edit_leave_day').val($(this).data('leave_day')).trigger('change');
+            $('#edit_reason').val($(this).data('reason'));
+        });
+
+        $('#updateLeaveForm').on('submit', function(e) {
+            e.preventDefault();
+            let formData = $(this).serialize();
+
+            $.ajax({
+                url: "{{ route('form/leaves/update') }}",
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        $('#edit_leave').modal('hide');
+                        toastr.success('Leave updated successfully!');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        toastr.error('Failed to update leave!');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('Something went wrong.');
+                }
+            });
+        });
+
+    });
+    </script>
     @endsection
 @endsection

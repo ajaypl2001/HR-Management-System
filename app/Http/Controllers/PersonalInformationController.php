@@ -165,7 +165,7 @@ class PersonalInformationController extends Controller
     }
 
 
-    public function editEducation(Request $request, $id)
+    public function editEducation(Request $request)
     {
         $request->validate([
             'institution' => 'required|string|max:255',
@@ -176,8 +176,10 @@ class PersonalInformationController extends Controller
             'grade' => 'nullable|string|max:255',
         ]);
 
-        $education = UserEducation::findOrFail($id);
-        $education->update($request->only(['institution', 'subject', 'start_date', 'end_date', 'degree', 'grade']));
+        $education = UserEducation::findOrFail($request->education_id);
+        $education->update($request->only([
+            'institution', 'subject', 'start_date', 'end_date', 'degree', 'grade'
+        ]));
 
         return back()->with('success', 'Education record updated successfully.');
     }
@@ -194,8 +196,6 @@ class PersonalInformationController extends Controller
             'period_to'     => 'required|array',
         ]);
 
-        // Optional: clear old experiences before adding new ones
-        // UserExperience::where('user_id', $request->user_id)->delete();
 
         foreach ($request->company_name as $index => $company) {
             if (!$company || !$request->job_position[$index]) {
@@ -215,5 +215,25 @@ class PersonalInformationController extends Controller
         return redirect()->back()->with('success', 'Experience details saved successfully!');
     }
 
+
+    public function updateExperience(Request $request)
+    {
+        $request->validate([
+            'company_name' => 'required',
+            'job_position' => 'required',
+            'location' => 'required',
+        ]);
+
+        DB::table('user_experiences')->where('id', $request->id)->update([
+            'company_name' => $request->company_name,
+            'job_position' => $request->job_position,
+            'location' => $request->location,
+            'period_from' => $request->period_from,
+            'period_to' => $request->period_to,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Experience updated successfully.');
+    }
 
 }

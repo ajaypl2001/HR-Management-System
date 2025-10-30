@@ -12,5 +12,11 @@ class Employee extends Model
     
     protected $fillable = [ // Using Models
         'employee_id',
+        'name',
+        'email',
+        'birth_date',
+        'gender',
+        'line_manager' 
     ];
 }
+  

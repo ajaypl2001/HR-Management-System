@@ -9,6 +9,7 @@ use App\Models\department;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\BankInformation;
 
 class EmployeeController extends Controller
 {
@@ -107,10 +108,9 @@ class EmployeeController extends Controller
     /** Update Record */
     public function updateRecord( Request $request)
     {
+        // dd($request->all());
         DB::beginTransaction();
         try {
-
-            // update table Employee
             $updateEmployee = [
                 'id'           => $request->id,
                 'name'         => $request->name,
@@ -121,14 +121,12 @@ class EmployeeController extends Controller
                 'line_manager' => $request->line_manager,
             ];
 
-            // update table user
             $updateUser = [
                 'id'    => $request->id,
                 'name'  => $request->name,
                 'email' => $request->email,
             ];
 
-            // update table module_permissions
             for($i = 0;$i<count($request->id_permission);$i++)
             {
                 $UpdateModule_permissions = [
@@ -369,11 +367,14 @@ class EmployeeController extends Controller
                 ->where('users.user_id', $user_id);
         }
 
-        // Usage:
-        $user = getUserDetails($user_id)->get();   // For multiple results
-        $users = getUserDetails($user_id)->first(); // For a single result
+        $user = getUserDetails($user_id)->get(); 
+        $users = getUserDetails($user_id)->first();
+        $bankInformation  = BankInformation::where('user_id', $user_id)->first();
+        $userfamilyinfo = DB::table('user_family_info')->where('user_id', $user_id)->get();
+        $userEducation = DB::table('user_education')->where('user_id', $user_id)->get();
+        $userExperiences = DB::table('user_experiences')->where('user_id', $user_id)->get();
 
-        return view('employees.employeeprofile',compact('user','users'));
+        return view('employees.employeeprofile',compact('user_id', 'user','users', 'bankInformation', 'userfamilyinfo', 'userEducation', 'userExperiences'));
     }
 
     /** Page Departments */

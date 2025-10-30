@@ -483,25 +483,42 @@
                                                     </div>
                                                     <div class="experience-content">
                                                         <div class="timeline-content">
-                                                            <a href="#/" class="name">
-                                                                {{ $experience->job_position }} at {{ $experience->company_name }}
+                                                            <a href="javascript:void(0);" 
+                                                                class="name text-capitalize editExperienceBtn"
+                                                                data-id="{{ $experience->id }}"
+                                                                data-company="{{ $experience->company_name }}"
+                                                                data-position="{{ $experience->job_position }}"
+                                                                data-location="{{ $experience->location }}"
+                                                                data-from="{{ $experience->period_from }}"
+                                                                data-to="{{ $experience->period_to }}">
+                                                                {{ $experience->job_position ?? 'Unknown Position' }}
+                                                                @if(!empty($experience->company_name))
+                                                                    <small class="text-muted">at {{ $experience->company_name }}</small>
+                                                                @endif
                                                             </a>
+
+                                                            @if(!empty($experience->location))
+                                                                <div><strong>Location:</strong> {{ $experience->location }}</div>
+                                                            @endif
+
                                                             <span class="time">
-                                                                {{ \Carbon\Carbon::parse($experience->period_from)->format('M Y') }}
-                                                                -
-                                                                {{ $experience->period_to ? \Carbon\Carbon::parse($experience->period_to)->format('M Y') : 'Present' }}
+                                                                @php
+                                                                    $from = $experience->period_from 
+                                                                        ? \Carbon\Carbon::parse($experience->period_from)->format('M Y') 
+                                                                        : 'N/A';
+                                                                    $to = $experience->period_to 
+                                                                        ? \Carbon\Carbon::parse($experience->period_to)->format('M Y') 
+                                                                        : 'Present';
+                                                                @endphp
+                                                                {{ $from }} - {{ $to }}
                                                             </span>
-                                                            <br>
-                                                            <small class="text-muted">
-                                                                {{ $experience->location }}
-                                                            </small>
                                                         </div>
                                                     </div>
                                                 </li>
                                             @empty
                                                 <li>
-                                                    <div class="timeline-content">
-                                                        <span class="text-muted">No experience records found.</span>
+                                                    <div class="timeline-content text-muted">
+                                                        No experience records found.
                                                     </div>
                                                 </li>
                                             @endforelse
@@ -510,10 +527,86 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <!-- /Profile Info Tab -->
+            <!-- Edit exprience -->
+            <!-- Edit Experience Modal -->
+            <div id="edit_experience_modal" class="modal custom-modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Experience</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="editExperienceForm" action="{{ route('updateExperience') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id" id="edit_id">
+                                <input type="hidden" name="user_id" value="{{ Session::get('user_id') }}">
+
+                                <div class="form-scroll">
+                                    <div class="card experience-card">
+                                        <div class="card-body">
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Company Name <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control floating" id="edit_company_name" name="company_name" placeholder="Enter Company Name">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Location <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control floating" id="edit_location" name="location" placeholder="Enter Location">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Job Position <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control floating" id="edit_job_position" name="job_position" placeholder="Enter Job Position">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Period From</label>
+                                                        <div class="cal-icon">
+                                                            <input type="text" class="form-control floating datetimepicker" id="edit_period_from" name="period_from" placeholder="Select Start Date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Period To</label>
+                                                        <div class="cal-icon">
+                                                            <input type="text" class="form-control floating datetimepicker" id="edit_period_to" name="period_to" placeholder="Select End Date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="submit-section text-right">
+                                    <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End Edit exprience -->    
             <!-- education edit modal -->
             <div id="editEducationModal" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -526,7 +619,7 @@
                         </div>
                     
                         <div class="modal-body">
-                            <form id="editEducationForm" method="POST">
+                            <form id="editEducationForm" method="POST" action="{{ route('editEducation') }}">
                                 @csrf
                                 <input type="hidden" name="education_id" id="education_id">
                                 <input type="hidden" name="user_id" value="{{ Session::get('user_id') }}">
@@ -2046,7 +2139,7 @@
         <!-- /Education Modal -->
         
         <!-- Experience Modal -->
-        <div id="experience_info" class="modal custom-modal fade" role="dialog">
+    <div id="experience_info" class="modal custom-modal fade" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2312,17 +2405,17 @@ $(document).on('click', '.editFamilyBtn', function (e) {
         });
 
         $(document).on('click', '.editEducationBtn', function () {
-            const modal = $('#editEducationModal');
+               const modal = $('#editEducationModal');
 
-            $('#education_id').val($(this).data('id'));
-            $('#institution').val($(this).data('institution'));
-            $('#subject').val($(this).data('subject'));
-            $('#degree').val($(this).data('degree'));
-            $('#grade').val($(this).data('grade'));
-            $('#start_date').val($(this).data('start'));
-            $('#end_date').val($(this).data('end'));
+                $('#education_id').val($(this).data('id'));
+                $('#institution').val($(this).data('institution'));
+                $('#subject').val($(this).data('subject'));
+                $('#degree').val($(this).data('degree'));
+                $('#grade').val($(this).data('grade'));
+                $('#start_date').val($(this).data('start'));
+                $('#end_date').val($(this).data('end'));
 
-            modal.modal('show');
+                modal.modal('show');
         });
 
         updateEducationCount();
@@ -2383,5 +2476,24 @@ $(document).on('click', '.editFamilyBtn', function (e) {
 </script>
 
 
+<script>
+    $(document).on('click', '.editExperienceBtn', function() {
+        var id = $(this).data('id');
+        var company = $(this).data('company');
+        var position = $(this).data('position');
+        var location = $(this).data('location');
+        var from = $(this).data('from');
+        var to = $(this).data('to');
+
+        $('#edit_id').val(id);
+        $('#edit_company_name').val(company);
+        $('#edit_job_position').val(position);
+        $('#edit_location').val(location);
+        $('#edit_period_from').val(from);
+        $('#edit_period_to').val(to);
+
+        $('#edit_experience_modal').modal('show');
+    });
+</script>
     @endsection
 @endsection

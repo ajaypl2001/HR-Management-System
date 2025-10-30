@@ -210,6 +210,9 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
                 Route::post('/save', 'saveRecordLeave')->name('form/leaves/save');
                 Route::get('/employee/new', 'leavesEmployee')->name('form/leaves/employee/new');
                 Route::post('/edit/delete','deleteLeave')->name('form/leaves/edit/delete');
+                Route::post('/leave/approve', 'approveleave')->name('leave.approve');
+                Route::post('/form/leaves/update', 'update')->name('form/leaves/update');
+
             });
             // --------------------- Form Attendance  -------------------------//
             Route::post('get/information/leave', 'getInformationLeave')->name('hr/get/information/leave');
@@ -319,8 +322,10 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
             Route::post('user-edit-family/information/save/{id}', 'saveEditfamilyRecord')->name('user-edit-family/information/save');
             Route::delete('user-family/information/delete/{id}', 'deleteFamilyRecord');
             Route::post('user/education/', 'saveEducation')->name('saveEducation');
-            Route::post('user/education/edit/{id}', 'editEducation')->name('editEducation');
+            Route::post('user/education/edit', 'editEducation')->name('editEducation');
             Route::post('user/exprience/edit/save', 'saveExprience')->name('saveExprience');
+            Route::post('/update-experience', 'updateExperience')->name('updateExperience');
+
         });
     });
 

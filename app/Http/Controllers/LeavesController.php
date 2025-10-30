@@ -7,12 +7,11 @@ use App\Models\LeaveInformation;
 use App\Models\LeavesAdmin;
 use App\Models\Leave;
 use DateTime;
-use Session;
-use DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class LeavesController extends Controller
 {
-    /** Leaves Admin Page */
     public function leavesAdmin()
     {
         $userList = DB::table('users')->get();
@@ -21,7 +20,6 @@ class LeavesController extends Controller
         return view('employees.leaves_manage.leavesadmin',compact('leaveInformation','userList','getLeave'));
     }
 
-    /** Get Information Leave */
     public function getInformationLeave(Request $request)
     {
         try {
@@ -33,7 +31,7 @@ class LeavesController extends Controller
             if ($leaveDay) {
                 $days = $leaveDay->leave_days - ($numberOfDay ?? 0);
             } else {
-                $days = 0; // Handle case if leave type doesn't exist
+                $days = 0; 
             }
 
             $data = [
@@ -47,49 +45,47 @@ class LeavesController extends Controller
             return response()->json($data);
 
         } catch (\Exception $e) {
-            // Log the exception and return an appropriate response
+            
             \Log::error($e->getMessage());
             return response()->json(['error' => 'An error occurred.'], 500);
         }
     }
 
-    /** Apply Leave */
     public function saveRecordLeave(Request $request)
     {
-        // Create an instance of the Leave model
+      
         $leave = new Leave();
-        // Call the applyLeave method
         return $leave->applyLeave($request);
     }
 
-    /** Delete Record */
     public function deleteLeave(Request $request)
     {
-        // Delete an instance of the Leave model
-        $delete = new Leave();
-        // Call the delete method
-        return $delete->deleteRecord($request);
+        $leave = Leave::find($request->id);
+
+        if (!$leave) {
+            return back()->with('error', 'Leave record not found.');
+        }
+
+        $leave->delete();
+
+        return back()->with('success', 'Leave record deleted successfully.');
     }
 
-    /** Leave Settings Page */
     public function leaveSettings()
     {
         return view('employees.leaves_manage.leavesettings');
     }
 
-    /** Attendance Admin */
     public function attendanceIndex()
     {
         return view('employees.attendance');
     }
 
-    /** Attendance Employee */
     public function AttendanceEmployee()
     {
         return view('employees.attendanceemployee');
     }
 
-    /** Leaves Employee Page */
     public function leavesEmployee()
     {
         $leaveInformation = LeaveInformation::all();
@@ -98,15 +94,47 @@ class LeavesController extends Controller
         return view('employees.leaves_manage.leavesemployee',compact('leaveInformation', 'getLeave'));
     }
 
-    /** Shift Scheduling */
     public function shiftScheduLing()
     {
         return view('employees.shiftscheduling');
     }
 
-    /** Shift List */
     public function shiftList()
     {
         return view('employees.shiftlist');
+    }
+
+    public function approveleave(Request $request)
+    {
+        $leave = Leave::find($request->id);
+
+        if (!$leave) {
+            return response()->json(['success' => false, 'message' => 'Leave not found.'], 404);
+        }
+
+        $leave->status = 'Approved';
+        $leave->save();
+
+        return response()->json(['success' => true, 'message' => 'Leave approved successfully.']);
+    }
+
+
+    public function update(Request $request)
+    {
+        $leave = Leave::find($request->id);
+
+        if ($leave) {
+            $leave->update([
+                'date_from' => $request->date_from,
+                'date_to' => $request->date_to,
+                'number_of_day' => $request->number_of_day,
+                'leave_day' => $request->leave_day,
+                'reason' => $request->reason,
+            ]);
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
     }
 }

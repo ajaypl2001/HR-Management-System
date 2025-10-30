@@ -269,7 +269,7 @@
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Bank information 
+                                    <h3 class="card-title">Bank information
                                         <a href="#" class="edit-icon" data-toggle="modal" data-target="#bank_information_modal">
                                             <i class="fa fa-pencil"></i>
                                         </a>
@@ -277,19 +277,35 @@
                                     <ul class="personal-info">
                                         <li>
                                             <div class="title">Bank name</div>
-                                            <div class="text">ICICI Bank</div>
+                                            @if(!empty($bankInformation->bank_name))
+                                                <div class="text">{{ $bankInformation->bank_name }}</div>
+                                            @else  
+                                                <div class="text">N/A</div>
+                                            @endif
                                         </li>
                                         <li>
                                             <div class="title">Bank account No.</div>
-                                            <div class="text">159843014641</div>
+                                            @if(!empty($bankInformation->bank_account_no))
+                                                <div class="text">{{ $bankInformation->bank_account_no }}</div>
+                                            @else  
+                                                <div class="text">N/A</div>
+                                            @endif
                                         </li>
                                         <li>
                                             <div class="title">IFSC Code</div>
-                                            <div class="text">ICI24504</div>
+                                            @if(!empty($bankInformation->ifsc_code))
+                                                <div class="text">{{ $bankInformation->ifsc_code }}</div>
+                                            @else  
+                                                <div class="text">N/A</div>
+                                            @endif
                                         </li>
                                         <li>
                                             <div class="title">PAN No</div>
-                                            <div class="text">TC000Y56</div>
+                                            @if(!empty($bankInformation->pan_no))
+                                                <div class="text">{{ $bankInformation->pan_no }}</div>
+                                            @else  
+                                                <div class="text">N/A</div>
+                                            @endif
                                         </li>
                                     </ul>
                                 </div>
@@ -311,21 +327,38 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Leo</td>
-                                                    <td>Brother</td>
-                                                    <td>Feb 16th, 2019</td>
-                                                    <td>9876543210</td>
-                                                    <td class="text-right">
-                                                        <div class="dropdown dropdown-action">
-                                                            <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#"><i class="material-icons">more_vert</i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a href="#" class="dropdown-item"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                                <a href="#" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                @foreach ($userfamilyinfo as $family)
+                                                    <tr>
+                                                        <td>{{ $family->name }}</td>
+                                                        <td>{{ $family->relationship }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($family->dob)->format('M d, Y') }}</td>
+                                                        <td>{{ $family->phone }}</td>
+                                                        <td class="text-right">
+                                                            <div class="dropdown dropdown-action">
+                                                                <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#">
+                                                                    <i class="material-icons">more_vert</i>
+                                                                </a>
+                                                                <div class="dropdown-menu dropdown-menu-right">
+                                                                    <a href="#" 
+                                                                        class="dropdown-item editFamilyBtn" 
+                                                                        data-id="{{ $family->id }}" 
+                                                                        data-name="{{ $family->name }}" 
+                                                                        data-relationship="{{ $family->relationship }}" 
+                                                                        data-dob="{{ $family->dob }}" 
+                                                                        data-phone="{{ $family->phone }}">
+                                                                        <i class="fa fa-pencil m-r-5"></i> Edit
+                                                                    </a>
+                                                                    <a href="#" 
+                                                                        class="dropdown-item deleteFamilyBtn" 
+                                                                        data-id="{{ $family->id }}">
+                                                                        <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -339,33 +372,56 @@
                                 <div class="card-body">
                                     <h3 class="card-title">Education Informations <a href="#" class="edit-icon" data-toggle="modal" data-target="#education_info"><i class="fa fa-pencil"></i></a></h3>
                                     <div class="experience-box">
-                                        <ul class="experience-list">
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">International College of Arts and Science (UG)</a>
-                                                        <div>Bsc Computer Science</div>
-                                                        <span class="time">2000 - 2003</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">International College of Arts and Science (PG)</a>
-                                                        <div>Msc Computer Science</div>
-                                                        <span class="time">2000 - 2003</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                            <ul class="experience-list">
+                                                @forelse ($userEducation as $education)
+                                                    <li>
+                                                        <div class="experience-user">
+                                                            <div class="before-circle"></div>
+                                                        </div>
+                                                        <div class="experience-content">
+                                                            <div class="timeline-content">
+                                                                <a href="javascript:void(0);" 
+                                                                        class="name text-capitalize editEducationBtn" 
+                                                                        data-id="{{ $education->id }}"
+                                                                        data-institution="{{ $education->institution }}"
+                                                                        data-subject="{{ $education->subject }}"
+                                                                        data-degree="{{ $education->degree }}"
+                                                                        data-grade="{{ $education->grade }}"
+                                                                        data-start="{{ $education->start_date }}"
+                                                                        data-end="{{ $education->end_date }}">
+                                                                    {{ $education->institution ?? 'Unknown Institution' }}
+                                                                    @if(!empty($education->subject))
+                                                                        <small class="text-muted">({{ $education->subject }})</small>
+                                                                    @endif
+                                                                </a>
+
+                                                                @if(!empty($education->degree))
+                                                                    <div><strong>Degree:</strong> {{ $education->degree }}</div>
+                                                                @endif
+
+                                                                @if(!empty($education->grade))
+                                                                    <div><strong>Grade:</strong> {{ $education->grade }}</div>
+                                                                @endif
+
+                                                                <span class="time">
+                                                                    @php
+                                                                        $start = $education->start_date ? \Carbon\Carbon::parse($education->start_date)->format('Y') : 'N/A';
+                                                                        $end   = $education->end_date ? \Carbon\Carbon::parse($education->end_date)->format('Y') : 'N/A';
+                                                                    @endphp
+                                                                    {{ $start }} - {{ $end }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                @empty
+                                                    <li>
+                                                        <div class="timeline-content text-muted">
+                                                            No education records found.
+                                                        </div>
+                                                    </li>
+                                                @endforelse
+                                            </ul>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -375,39 +431,52 @@
                                     <h3 class="card-title">Experience <a href="#" class="edit-icon" data-toggle="modal" data-target="#experience_info"><i class="fa fa-pencil"></i></a></h3>
                                     <div class="experience-box">
                                         <ul class="experience-list">
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Zen Corporation</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
+                                            @forelse ($userExperiences as $experience)
+                                                <li>
+                                                    <div class="experience-user">
+                                                        <div class="before-circle"></div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Ron-tech</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
+                                                    <div class="experience-content">
+                                                        <div class="timeline-content">
+                                                            <a href="javascript:void(0);" 
+                                                                class="name text-capitalize editExperienceBtn"
+                                                                data-id="{{ $experience->id }}"
+                                                                data-company="{{ $experience->company_name }}"
+                                                                data-position="{{ $experience->job_position }}"
+                                                                data-location="{{ $experience->location }}"
+                                                                data-from="{{ $experience->period_from }}"
+                                                                data-to="{{ $experience->period_to }}">
+                                                                {{ $experience->job_position ?? 'Unknown Position' }}
+                                                                @if(!empty($experience->company_name))
+                                                                    <small class="text-muted">at {{ $experience->company_name }}</small>
+                                                                @endif
+                                                            </a>
+
+                                                            @if(!empty($experience->location))
+                                                                <div><strong>Location:</strong> {{ $experience->location }}</div>
+                                                            @endif
+
+                                                            <span class="time">
+                                                                @php
+                                                                    $from = $experience->period_from 
+                                                                        ? \Carbon\Carbon::parse($experience->period_from)->format('M Y') 
+                                                                        : 'N/A';
+                                                                    $to = $experience->period_to 
+                                                                        ? \Carbon\Carbon::parse($experience->period_to)->format('M Y') 
+                                                                        : 'Present';
+                                                                @endphp
+                                                                {{ $from }} - {{ $to }}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Dalt Technology</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
+                                                </li>
+                                            @empty
+                                                <li>
+                                                    <div class="timeline-content text-muted">
+                                                        No experience records found.
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @endforelse
                                         </ul>
                                     </div>
                                 </div>
@@ -1161,32 +1230,48 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form action="{{ route('bank/information/save') }}" method="POST">
                             @csrf
-                            <input type="hidden" class="form-control" name="user_id" value="{{ Session::get('user_id') }}" readonly>
+                            <input type="hidden" class="form-control" name="user_id" value="{{ $user_id }}" readonly>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Bank name</label>
-                                        <input type="text" class="form-control @error('bank_name') is-invalid @enderror" name="bank_name" value="{{ old('bank_name') }}">
+                                        @if(!empty($bankInformation->bank_name))
+                                            <input type="text" class="form-control @error('bank_name') is-invalid @enderror" name="bank_name" value="{{ $bankInformation->bank_name }}">
+                                        @else 
+                                            <input type="text" class="form-control @error('bank_name') is-invalid @enderror" name="bank_name" value="{{ old('bank_name') }}">
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Bank account No</label>
-                                        <input type="text" class="form-control @error('bank_account_no') is-invalid @enderror" name="bank_account_no" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('bank_account_no') }}">
+                                        @if(!empty($bankInformation->bank_account_no))
+                                            <input type="text" class="form-control @error('bank_account_no') is-invalid @enderror" name="bank_account_no" value="{{ $bankInformation->bank_account_no }}">
+                                        @else 
+                                            <input type="text" class="form-control @error('bank_account_no') is-invalid @enderror" name="bank_account_no" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('bank_account_no') }}">
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>IFSC Code</label>
-                                        <input type="text" class="form-control @error('ifsc_code') is-invalid @enderror" name="ifsc_code" value="{{ old('ifsc_code') }}">
+                                        @if(!empty($bankInformation->ifsc_code))
+                                            <input type="text" class="form-control @error('ifsc_code') is-invalid @enderror" name="ifsc_code" value="{{ $bankInformation->ifsc_code }}">
+                                        @else 
+                                            <input type="text" class="form-control @error('pan_no') is-invalid @enderror" name="ifsc_code" value="{{ old('ifsc_code') }}">
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>PAN No</label>
-                                        <input type="text" class="form-control @error('pan_no') is-invalid @enderror" name="pan_no" value="{{ old('pan_no') }}">
+                                        @if(!empty($bankInformation->pan_no))
+                                            <input type="text" class="form-control @error('pan_no') is-invalid @enderror" name="pan_no" value="{{ $bankInformation->pan_no }}">
+                                        @else 
+                                            <input type="text" class="form-control @error('pan_no') is-invalid @enderror" name="pan_no" value="{{ old('pan_no') }}">
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -1211,85 +1296,148 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Family Member <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Name <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
+                        <form id="familyinfo" action="{{ route('user-family/information/save') }}" method="POST">
+                            @csrf
+                            <input type="hidden" class="form-control" name="user_id" value="{{ $user_id }}" readonly>
+
+                            <div class="form-scroll" id="contact-container">
+                                    <!-- Primary Contact -->
+                                    <div class="card contact-card">
+                                        <div class="card-body">
+                                            <h3 class="card-title">
+                                                Primary Contact 
+                                                <a href="javascript:void(0);" class="delete-icon d-none"><i class="fa fa-trash-o"></i></a>
+                                            </h3>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Name <span class="text-danger">*</span></label>
+                                                        <input class="form-control" type="text" name="name[]">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Relationship <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Relationship <span class="text-danger">*</span></label>
+                                                        <input class="form-control" type="text" name="relationship[]">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Date of birth <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Date of birth <span class="text-danger">*</span></label>
+                                                        <input class="form-control datetimepicker" type="text" name="dob[]">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Phone <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Phone <span class="text-danger">*</span></label>
+                                                        <input class="form-control" type="text" name="phone[]">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Name <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
+
+                                    <!-- Secondary Contact (template for cloning) -->
+                                    <div class="card contact-card">
+                                        <div class="card-body">
+                                            <h3 class="card-title">
+                                                Secondary Contact 
+                                                <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a>
+                                            </h3>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Name <span class="text-danger">*</span></label>
+                                                        <input class="form-control" type="text" name="name[]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Relationship <span class="text-danger">*</span></label>
+                                                        <input class="form-control" type="text" name="relationship[]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Date of birth <span class="text-danger">*</span></label>
+                                                        <input class="form-control datetimepicker" type="text" name="dob[]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Phone <span class="text-danger">*</span></label>
+                                                        <input class="form-control" type="text" name="phone[]">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Relationship <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Date of birth <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Phone <span class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
                                         </div>
                                     </div>
+
                                 </div>
-                            </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
+
+                                <!-- Add More Button -->
+                                <div class="add-more text-end mt-3">
+                                    <a href="javascript:void(0);" id="addMore"><i class="fa fa-plus-circle"></i> Add More</a>
+                                </div>
+
+                                <div class="submit-section mt-4">
+                                    <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                </div>
                 </div>
             </div>
         </div>
         <!-- /Family Info Modal -->
         
+        <!-- Edit Family -->
+
+        <div id="family_edit_modal" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"> Family Informations</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <form id="familyEditForm" method="POST">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user_id }}">
+                                <input type="hidden" id="family_id" name="id">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="edit_name" name="name">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Relationship <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="edit_relationship" name="relationship">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Date of Birth <span class="text-danger">*</span></label>
+                                        <input class="form-control datetimepicker" type="text" id="edit_dob" name="dob">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Phone <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="edit_phone" name="phone">
+                                    </div>
+                                </div>
+
+                                <div class="submit-section mt-4">
+                                    <button class="btn btn-primary submit-btn" type="submit">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!--End Edit Family -->
+
         <!-- Emergency Contact Modal -->
         <div id="emergency_contact_modal" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -1303,7 +1451,7 @@
                     <div class="modal-body">
                         <form id="validation" action="{{ route('user/profile/emergency/contact/save') }}" method="POST">
                             @csrf
-                            <input type="text" class="form-control" name="user_id" value="{{ $users->user_id }}">
+                            <input type="hidden" class="form-control" name="user_id" value="{{ $users->user_id }}">
                             <div class="card">
                                 <div class="card-body">
                                     <h3 class="card-title">Primary Contact</h3>
@@ -1421,117 +1569,219 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
+                        <form id="educationForm" action="{{ route('saveEducation') }}" method="POST">
+                            @csrf
+                            <input type="hidden" class="form-control" name="user_id" value="{{ $user_id }}">
+                            <div class="form-scroll" id="educationContainer">
+
+                                <div class="card education-card">
                                     <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
+                                        <h3 class="card-title">
+                                            Education Information <span class="edu-count">1</span>
+                                        </h3>
                                         <div class="row">
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Oxford University" class="form-control floating">
-                                                    <label class="focus-label">Institution</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Institution <span class="text-danger">*</span></label>
+                                                    <input type="text" name="institution[]" class="form-control floating" placeholder="Enter Institution Name">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Subject</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Subject <span class="text-danger">*</span></label>
+                                                    <input type="text" name="subject[]" class="form-control floating" placeholder="Enter Subject">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Start Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="01/06/2002" class="form-control floating datetimepicker">
+                                                        <input type="text" name="start_date[]" class="form-control floating datetimepicker" placeholder="Select Start Date">
                                                     </div>
-                                                    <label class="focus-label">Starting Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Completion Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="31/05/2006" class="form-control floating datetimepicker">
+                                                        <input type="text" name="end_date[]" class="form-control floating datetimepicker" placeholder="Select Completion Date">
                                                     </div>
-                                                    <label class="focus-label">Complete Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="BE Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Degree</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Degree</label>
+                                                    <input type="text" name="degree[]" class="form-control floating" placeholder="Enter Degree">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Grade A" class="form-control floating">
-                                                    <label class="focus-label">Grade</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Grade</label>
+                                                    <input type="text" name="grade[]" class="form-control floating" placeholder="Enter Grade">
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="card">
+
+                                <div class="card education-card">
                                     <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
+                                        <h3 class="card-title">
+                                            Education Information <span class="edu-count">2</span>
+                                            <a href="javascript:void(0);" class="delete-icon text-danger float-right">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </h3>
                                         <div class="row">
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Oxford University" class="form-control floating">
-                                                    <label class="focus-label">Institution</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Institution <span class="text-danger">*</span></label>
+                                                    <input type="text" name="institution[]" class="form-control floating" placeholder="Enter Institution Name">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Subject</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Subject <span class="text-danger">*</span></label>
+                                                    <input type="text" name="subject[]" class="form-control floating" placeholder="Enter Subject">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Start Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="01/06/2002" class="form-control floating datetimepicker">
+                                                        <input type="text" name="start_date[]" class="form-control floating datetimepicker" placeholder="Select Start Date">
                                                     </div>
-                                                    <label class="focus-label">Starting Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Completion Date</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" value="31/05/2006" class="form-control floating datetimepicker">
+                                                        <input type="text" name="end_date[]" class="form-control floating datetimepicker" placeholder="Select Completion Date">
                                                     </div>
-                                                    <label class="focus-label">Complete Date</label>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="BE Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Degree</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Degree</label>
+                                                    <input type="text" name="degree[]" class="form-control floating" placeholder="Enter Degree">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Grade A" class="form-control floating">
-                                                    <label class="focus-label">Grade</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Grade</label>
+                                                    <input type="text" name="grade[]" class="form-control floating" placeholder="Enter Grade">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
+
+                            <div class="add-more text-left my-3">
+                                <a href="javascript:void(0);" id="addMoreEdu">
+                                    <i class="fa fa-plus-circle"></i> Add More
+                                </a>
+                            </div>
+
+                            <div class="submit-section text-right">
+                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
         </div>
         <!-- /Education Modal -->
         
+        <div id="editEducationModal" class="modal custom-modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Education Information</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    
+                        <div class="modal-body">
+                            <form id="editEducationForm" method="POST" action="{{ route('editEducation') }}">
+                                @csrf
+                                <input type="hidden" name="education_id" id="education_id">
+                                <input type="hidden" name="user_id" value="{{ $user_id }}">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Institution <span class="text-danger">*</span></label>
+                                            <input type="text" name="institution" id="institution" class="form-control floating">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Subject</label>
+                                            <input type="text" name="subject" id="subject" class="form-control floating">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Start Date</label>
+                                            <div class="cal-icon">
+                                                <input type="text" name="start_date" id="start_date" class="form-control floating datetimepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Completion Date</label>
+                                            <div class="cal-icon">
+                                                <input type="text" name="end_date" id="end_date" class="form-control floating datetimepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Degree</label>
+                                            <input type="text" name="degree" id="degree" class="form-control floating">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group form-focus my-3">
+                                            <label>Grade</label>
+                                            <input type="text" name="grade" id="grade" class="form-control floating">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="submit-section text-right">
+                                    <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <!-- Experience Modal -->
         <div id="experience_info" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -1542,98 +1792,79 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
+                        <div class="modal-body">
+                        <form id="experienceForm" action="{{ route('saveExprience') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="user_id" value="{{ $user_id }}">
+
+                            <div class="form-scroll" id="experienceContainer">
+
+                                <div class="card experience-card d-none" id="experienceTemplate">
                                     <div class="card-body">
-                                        <h3 class="card-title">Experience Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
+                                        <h3 class="card-title">
+                                            Experience Information <span class="exp-count"></span>
+                                            <a href="javascript:void(0);" class="delete-icon text-danger float-right remove-experience">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </h3>
+
                                         <div class="row">
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Digital Devlopment Inc">
-                                                    <label class="focus-label">Company Name</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Company Name <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control floating" name="company_name[]" placeholder="Enter Company Name">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="United States">
-                                                    <label class="focus-label">Location</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Location <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control floating" name="location[]" placeholder="Enter Location">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Web Developer">
-                                                    <label class="focus-label">Job Position</label>
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Job Position <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control floating" name="job_position[]" placeholder="Enter Job Position">
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Period From</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="01/07/2007">
+                                                        <input type="text" name="period_from[]" class="form-control floating datetimepicker" placeholder="Select Start Date">
                                                     </div>
-                                                    <label class="focus-label">Period From</label>
                                                 </div>
                                             </div>
+                                            
+
                                             <div class="col-md-6">
-                                                <div class="form-group form-focus">
+                                                <div class="form-group form-focus my-3">
+                                                    <label>Period To</label>
                                                     <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="08/06/2018">
+                                                        <input type="text" class="form-control floating datetimepicker" name="period_to[]" placeholder="Select End Date">
                                                     </div>
-                                                    <label class="focus-label">Period To</label>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Experience Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Digital Devlopment Inc">
-                                                    <label class="focus-label">Company Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="United States">
-                                                    <label class="focus-label">Location</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Web Developer">
-                                                    <label class="focus-label">Job Position</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="01/07/2007">
-                                                    </div>
-                                                    <label class="focus-label">Period From</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="08/06/2018">
-                                                    </div>
-                                                    <label class="focus-label">Period To</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- End Template -->
+
                             </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
+
+                            <div class="add-more text-left my-3">
+                                <a href="javascript:void(0);" id="addMoreExperience">
+                                    <i class="fa fa-plus-circle"></i> Add More
+                                </a>
+                            </div>
+
+                            <div class="submit-section text-right">
+                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -1641,6 +1872,82 @@
             </div>
         </div>
         <!-- /Experience Modal -->
+
+         <!-- Edit Experience Modal -->
+            <div id="edit_experience_modal" class="modal custom-modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Experience</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="editExperienceForm" action="{{ route('updateExperience') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id" id="edit_id">
+                                <input type="hidden" name="user_id" value="{{ $user_id }}">
+
+                                <div class="form-scroll">
+                                    <div class="card experience-card">
+                                        <div class="card-body">
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Company Name <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control floating" id="edit_company_name" name="company_name" placeholder="Enter Company Name">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Location <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control floating" id="edit_location" name="location" placeholder="Enter Location">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Job Position <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control floating" id="edit_job_position" name="job_position" placeholder="Enter Job Position">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Period From</label>
+                                                        <div class="cal-icon">
+                                                            <input type="text" class="form-control floating datetimepicker" id="edit_period_from" name="period_from" placeholder="Select Start Date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-focus my-3">
+                                                        <label>Period To</label>
+                                                        <div class="cal-icon">
+                                                            <input type="text" class="form-control floating datetimepicker" id="edit_period_to" name="period_to" placeholder="Select End Date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="submit-section text-right">
+                                    <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     <!-- /Page Content -->
     </div>
     @section('script')
@@ -1671,5 +1978,246 @@
             }  
         });  
     </script>
+
+
+    <script>
+        $(document).ready(function() {
+            let contactCount = 2; 
+
+            $('#addMore').click(function() {
+                contactCount++;
+
+                let newCard = $('.contact-card').last().clone();
+
+                newCard.find('input').val('');
+
+                newCard.find('.card-title').html(
+                    'Contact ' + contactCount + 
+                    ' <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a>'
+                );
+
+                $('#contact-container').append(newCard);
+            });
+
+            $(document).on('click', '.delete-icon', function() {
+                if ($('.contact-card').length > 1) {
+                    $(this).closest('.contact-card').remove();
+
+                    $('.contact-card').each(function(index) {
+                        let title = index === 0 ? 'Primary Contact' : 'Contact ' + (index + 1);
+                        $(this).find('.card-title').html(
+                            title + (index === 0 
+                                ? ' <a href="javascript:void(0);" class="delete-icon d-none"><i class="fa fa-trash-o"></i></a>' 
+                                : ' <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a>')
+                        );
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).on('click', '.editFamilyBtn', function (e) {
+            e.preventDefault();
+
+            let id = $(this).data('id');
+            let name = $(this).data('name');
+            let relationship = $(this).data('relationship');
+            let dob = $(this).data('dob');
+            let phone = $(this).data('phone');
+
+            $('#family_id').val(id);
+            $('#edit_name').val(name);
+            $('#edit_relationship').val(relationship);
+            $('#edit_dob').val(dob);
+            $('#edit_phone').val(phone);
+
+            let actionUrl = "{{ url('user-edit-family/information/save') }}/" + id;
+            $('#familyEditForm').attr('action', actionUrl);
+
+            $('#family_edit_modal').modal('show');
+        });
+    </script>
+
+
+    <script>
+        $(document).on('click', '.deleteFamilyBtn', function (e) {
+            e.preventDefault();
+            if (!confirm('Are you sure you want to delete this family record?')) return;
+
+            let id = $(this).data('id');
+
+            $.ajax({
+                url: "{{ url('user-family/information/delete') }}/" + id,
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    _method: "DELETE"
+                },
+                success: function (response) {
+                    alert(response.message);
+                    location.reload();
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    alert('Error deleting record.');
+                }
+            });
+        });
+    </script>
+
+    <script>
+    $(document).ready(function() {
+
+        function updateEducationCount() {
+            $('#educationContainer .education-card').each(function(index) {
+                $(this).find('.edu-count').text(index + 1);
+            });
+        }
+
+        $('#addMoreEdu').on('click', function() {
+            let newEdu = $('#educationContainer .education-card:first').clone();
+            newEdu.find('input').val(''); 
+            newEdu.find('.card-title').append('<a href="javascript:void(0);" class="delete-icon text-danger float-right"><i class="fa fa-trash-o"></i></a>');
+            $('#educationContainer').append(newEdu);
+            updateEducationCount();
+        });
+
+        $(document).on('click', '.delete-icon', function() {
+            $(this).closest('.education-card').remove();
+            updateEducationCount();
+        });
+
+        $(document).on('click', '.editEducationBtn', function () {
+            const modal = $('#editEducationModal');
+
+            $('#education_id').val($(this).data('id'));
+            $('#institution').val($(this).data('institution'));
+            $('#subject').val($(this).data('subject'));
+            $('#degree').val($(this).data('degree'));
+            $('#grade').val($(this).data('grade'));
+            $('#start_date').val($(this).data('start'));
+            $('#end_date').val($(this).data('end'));
+
+            modal.modal('show');
+        });
+
+        updateEducationCount();
+    });
+ </script>
+
+ <script>
+    $(document).ready(function() {
+
+        function updateEducationCount() {
+            $('#educationContainer .education-card').each(function(index) {
+                $(this).find('.edu-count').text(index + 1);
+            });
+        }
+
+        $('#addMoreEdu').on('click', function() {
+            let newEdu = $('#educationContainer .education-card:first').clone();
+            newEdu.find('input').val(''); 
+            newEdu.find('.card-title').append('<a href="javascript:void(0);" class="delete-icon text-danger float-right"><i class="fa fa-trash-o"></i></a>');
+            $('#educationContainer').append(newEdu);
+            updateEducationCount();
+        });
+
+        $(document).on('click', '.delete-icon', function() {
+            $(this).closest('.education-card').remove();
+            updateEducationCount();
+        });
+
+        $(document).on('click', '.editEducationBtn', function () {
+            const modal = $('#editEducationModal');
+
+            $('#education_id').val($(this).data('id'));
+            $('#institution').val($(this).data('institution'));
+            $('#subject').val($(this).data('subject'));
+            $('#degree').val($(this).data('degree'));
+            $('#grade').val($(this).data('grade'));
+            $('#start_date').val($(this).data('start'));
+            $('#end_date').val($(this).data('end'));
+
+            modal.modal('show');
+        });
+
+        updateEducationCount();
+    });
+ </script>
+
+ <script>
+    $(document).ready(function () {
+        const container = $("#experienceContainer");
+        const template = $("#experienceTemplate");
+        template.find("input, select, textarea").prop("disabled", true);
+
+        function initDatePickers(context) {
+            context.find('.datetimepicker').datetimepicker({
+                format: 'DD-MM-YYYY',
+                icons: {
+                    up: "fa fa-angle-up",
+                    down: "fa fa-angle-down",
+                    next: 'fa fa-angle-right',
+                    previous: 'fa fa-angle-left'
+                }
+            });
+        }
+
+        function addExperience(removable = true) {
+            const newBlock = template.clone().removeClass('d-none').removeAttr('id');
+            newBlock.find("input, select, textarea").prop("disabled", false);
+
+            if (!removable) {
+                newBlock.find('.remove-experience').remove();
+            }
+
+            container.append(newBlock);
+            initDatePickers(newBlock);
+            updateExperienceNumbers();
+        }
+
+        function updateExperienceNumbers() {
+            container.find('.experience-card:not(#experienceTemplate)').each(function (index) {
+                $(this).find('.exp-count').text(index + 1);
+            });
+        }
+
+        addExperience(false);
+
+        $("#addMoreExperience").click(function () {
+            addExperience(true);
+        });
+
+        $(document).on('click', '.remove-experience', function () {
+            $(this).closest('.experience-card').remove();
+            updateExperienceNumbers();
+        });
+
+        initDatePickers($(document));
+    });
+</script>
+
+
+<script>
+    $(document).on('click', '.editExperienceBtn', function() {
+        var id = $(this).data('id');
+        var company = $(this).data('company');
+        var position = $(this).data('position');
+        var location = $(this).data('location');
+        var from = $(this).data('from');
+        var to = $(this).data('to');
+
+        $('#edit_id').val(id);
+        $('#edit_company_name').val(company);
+        $('#edit_job_position').val(position);
+        $('#edit_location').val(location);
+        $('#edit_period_from').val(from);
+        $('#edit_period_to').val(to);
+
+        $('#edit_experience_modal').modal('show');
+    });
+</script>
     @endsection
 @endsection

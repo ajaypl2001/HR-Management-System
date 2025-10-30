@@ -33,45 +33,50 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th hidden>id</th>
-                                    <th>Title </th>
+                                    <th hidden>ID</th>
+                                    <th>Title</th>
                                     <th>Holiday Date</th>
-                                    <th hidden></th>
                                     <th>Day</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($holidays as $key=>$items )
-                                    @if(($today_date > $items->date_holiday))
-                                        <tr class="holiday-completed">
-                                            <td>{{ ++$key }}</td>
-                                            <td>{{ $items->name_holiday }}</td>
-                                            <td>{{date('d F, Y',strtotime($items->date_holiday)) }}</td>
-                                            <td>{{date('l',strtotime($items->date_holiday)) }}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                                @foreach ($holidays as $key=>$items )
-                                    @if(($today_date <= $items->date_holiday))
-                                        <tr class="holiday-upcoming">
-                                            <td hidden class="id">{{ $items->id }}</td>
-                                            <td>{{ ++$key }}</td>
-                                            <td class="holidayName">{{ $items->name_holiday }}</td>
-                                            <td hidden class="holidayDate">{{$items->date_holiday }}</td>
-                                            <td>{{date('d F, Y',strtotime($items->date_holiday)) }}</td>
-                                            <td>{{date('l',strtotime($items->date_holiday)) }}</td>
-                                            <td class="text-right">
-                                                <div class="dropdown dropdown-action">
-                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item userUpdate" data-toggle="modal" data-id="'.$items->id.'" data-target="#edit_holiday"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                        <a class="dropdown-item deleteRecord" href="#" data-toggle="modal" data-target="#deleteRecord"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                    </div>
+                                @foreach ($holidays as $holiday)
+                                    @php
+                                        $isPast = $today_date > $holiday->date_holiday;
+                                        $rowClass = $isPast ? 'holiday-completed' : 'holiday-upcoming';
+                                    @endphp
+
+                                    <tr class="{{ $rowClass }}">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td hidden>{{ $holiday->id }}</td>
+                                        <td class="holidayName">{{ $holiday->name_holiday }}</td>
+                                        <td hidden class="holidayDate">{{ $holiday->date_holiday }}</td>
+                                        <td>{{ date('d F, Y', strtotime($holiday->date_holiday)) }}</td>
+                                        <td>{{ date('l', strtotime($holiday->date_holiday)) }}</td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="material-icons">more_vert</i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item userUpdate" 
+                                                    data-toggle="modal" 
+                                                    data-id="{{ $holiday->id }}" 
+                                                    data-target="#edit_holiday">
+                                                    <i class="fa fa-pencil m-r-5"></i> Edit
+                                                    </a>
+                                                    <a class="dropdown-item deleteRecord" 
+                                                        href="#" 
+                                                        data-toggle="modal" 
+                                                        data-target="#deleteRecord" 
+                                                        data-id="{{ $holiday->id }}">
+                                                        <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                    </a>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    @endif
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -192,10 +197,9 @@
 
     <!-- Delete -->
     <script>
-        $(document).on('click','.deleteRecord',function()
-        {
-            var _this = $(this).parents('tr');
-            $('.e_id').val(_this.find('.id').text());
+       $(document).on('click', '.deleteRecord', function() {
+            var id = $(this).data('id');  
+            $('.e_id').val(id);           
         });
     </script>
 @endsection

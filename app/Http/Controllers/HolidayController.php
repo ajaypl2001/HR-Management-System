@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Holiday;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class HolidayController extends Controller
 {
