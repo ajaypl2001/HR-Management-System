@@ -406,7 +406,7 @@
 
                             <div class="form-group">
                                 <label>Leave Day <span class="text-danger">*</span></label>
-                                <select class="select" name="select_leave_day[]" id="edit_leave_day">
+                                <select class="select" name="select_leave_day" id="edit_leave_day">
                                     <option value="Full-Day Leave">Full-Day Leave</option>
                                     <option value="Half-Day Morning Leave">Half-Day Morning Leave</option>
                                     <option value="Half-Day Afternoon Leave">Half-Day Afternoon Leave</option>
@@ -744,9 +744,9 @@
         $(document).ready(function() {
         $(document).on('click', '.leaveUpdate', function() {
             $('#edit_id').val($(this).data('id'));
-            $('#edit_employee_name').val($(this).data('employee_name'));
+            $('#edit_employee_name').val($(this).data('employee_name')).trigger('change');
             $('#edit_employee_id').val($(this).data('employee_id'));
-            $('#edit_leave_type').val($(this).data('leave_type'));
+            $('#edit_leave_type').val($(this).data('leave_type')).trigger('change');
             $('#edit_remaining_leave').val($(this).data('remaining_leave'));
             $('#edit_date_from').val($(this).data('date_from'));
             $('#edit_date_to').val($(this).data('date_to'));

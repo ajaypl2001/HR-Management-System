@@ -28,6 +28,7 @@ class Leave extends Model
     /** Save Record Leave or Update */
     public function applyLeave(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'leave_type' => 'required|string',
             'date_from'  => 'required',
@@ -46,7 +47,7 @@ class Leave extends Model
 
             Leave::updateOrCreate(
                 [
-                    'id' => $request->id_record, // Unique attribute(s) to check for existing record
+                    'id' => $request->id_record, 
                 ],
                 [
                     'staff_id'        => $employee_id,

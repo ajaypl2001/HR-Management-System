@@ -53,7 +53,6 @@ class LeavesController extends Controller
 
     public function saveRecordLeave(Request $request)
     {
-      
         $leave = new Leave();
         return $leave->applyLeave($request);
     }

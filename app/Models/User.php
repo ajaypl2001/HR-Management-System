@@ -22,7 +22,7 @@ class User extends Authenticatable
      */
     protected $table = 'users'; // Specify the table name if it's not pluralized
 
-    protected $fillable = ['name', 'email', 'password','org_password','status', 'avatar'];
+    protected $fillable = ['name', 'email', 'password','org_password','status', 'avatar', 'role_name'];
 
     /**
      * The attributes that should be hidden for serialization.

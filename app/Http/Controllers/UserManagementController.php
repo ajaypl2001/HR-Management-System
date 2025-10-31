@@ -294,7 +294,7 @@ class UserManagementController extends Controller
             'position'  => 'required|string|max:255',
             'department' => 'required|string|max:255',
             'status'    => 'required|string|max:255',
-            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Added image file type and size validation
+            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
             'password'  => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required',
         ]);
@@ -343,7 +343,6 @@ class UserManagementController extends Controller
 
             $image = $request->file('images');
             if ($image) {
-                // Delete old image if it's not the default
                 if ($image_name && $image_name !== 'photo_defaults.jpg') {
                     $oldImagePath = public_path('assets/images/' . $image_name);
                     if (file_exists($oldImagePath)) {
@@ -351,12 +350,10 @@ class UserManagementController extends Controller
                     }
                 }
 
-                // Store new image
                 $image_name = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('assets/images'), $image_name);
             }
 
-            // Update user data
             $update = [
                 'name'         => $request->name,
                 'email'        => $request->email,
@@ -386,7 +383,6 @@ class UserManagementController extends Controller
         }
     }
 
-    /** Delete Record */
     public function delete(Request $request)
     {
         $request->validate([
@@ -400,7 +396,6 @@ class UserManagementController extends Controller
             $dt = Carbon::now();
             $todayDate = $dt->toDayDateTimeString();
 
-            // Log the deletion activity
             $activityLog = [
                 'user_name'    => Session::get('name'),
                 'email'        => Session::get('email'),
@@ -411,24 +406,28 @@ class UserManagementController extends Controller
                 'date_time'    => $todayDate,
             ];
 
-            DB::table('user_activity_logs')->insert($activityLog);
+            DB::enableQueryLog();
+
+            try {
+                DB::table('user_activity_logs')->insert($activityLog);
+            } catch (\Exception $e) {
+                $queries = DB::getQueryLog();
+                dd('Insert query failed!', $e->getMessage(), $queries);
+            }
 
             $userId = $request->id;
             $avatar = $request->avatar;
 
-            // Find the user first
             $user = User::find($userId);
             if (!$user) {
                 flash()->error('User not found.');
                 return redirect()->back();
             }
 
-            // Delete related records
             PersonalInformation::where('user_id', $userId)->delete();
             UserEmergencyContact::where('user_id', $userId)->delete();
             $user->delete();
 
-            // Delete the avatar if not default and file exists
             if ($avatar !== 'photo_defaults.jpg') {
                 $avatarPath = public_path('assets/images/' . $avatar);
                 if (file_exists($avatarPath)) {
@@ -447,19 +446,17 @@ class UserManagementController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::error('Error deleting user: ' . $e->getMessage(), ['exception' => $e]);
-            flash()->error('User deletion failed :)');
-            return redirect()->back();
+
+            dd('General error while deleting user:', $e->getMessage());
         }
     }
 
-    /** View Change Password */
+
     public function changePasswordView()
     {
         return view('settings.changepassword');
     }
 
-    /** Change Password User */
     public function changePasswordDB(Request $request)
     {
         $request->validate([
@@ -469,30 +466,20 @@ class UserManagementController extends Controller
         ]);
 
         try {
-            // Find the authenticated user
             $user = Auth::user();
-            // Update the user's password
             $user->update(['password' => Hash::make($request->new_password)]);
-            // Commit the transaction
             DB::commit();
-            // Show success message
             flash()->success('Password changed successfully :)');
-            // Redirect to the intended route
             return redirect()->intended('home');
         } catch (\Exception $e) {
-            // Rollback the transaction in case of error
             DB::rollBack();
-            // Optionally log the error or show an error message
             flash()->error('An error occurred while changing the password. Please try again.');
-            // Redirect back
             return redirect()->back();
         }
     }
 
-    /** User Profile Emergency Contact */
     public function emergencyContactSaveOrUpdate(Request $request)
     {
-        // Validate form input
         $request->validate([
             'name_primary'           => 'required',
             'relationship_primary'   => 'required',
@@ -505,7 +492,6 @@ class UserManagementController extends Controller
         ]);
 
         try {
-            // Save or update emergency contact
             $saveRecord = UserEmergencyContact::updateOrCreate(
                 ['user_id' => $request->user_id],
                 [
@@ -520,14 +506,11 @@ class UserManagementController extends Controller
                 ]
             );
 
-            // Success message
             flash()->success('Emergency contact updated successfully :)');
         } catch (Exception $e) {
-            // Log the error and show failure message
             \Log::error('Failed to save emergency contact: ' . $e->getMessage());
             flash()->error('Failed to update emergency contact');
         }
-        // Redirect back
         return redirect()->back();
     }
 }

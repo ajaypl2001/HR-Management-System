@@ -60,11 +60,13 @@
                                                     <i class="material-icons">more_vert</i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item userUpdate" 
-                                                    data-toggle="modal" 
-                                                    data-id="{{ $holiday->id }}" 
-                                                    data-target="#edit_holiday">
-                                                    <i class="fa fa-pencil m-r-5"></i> Edit
+                                                    <a class="dropdown-item userUpdate"
+                                                        data-toggle="modal"
+                                                        data-target="#edit_holiday"
+                                                        data-id="{{ $holiday->id }}"
+                                                        data-name="{{ $holiday->name_holiday }}"
+                                                        data-date="{{ $holiday->date_holiday }}">
+                                                        <i class="fa fa-pencil m-r-5"></i> Edit
                                                     </a>
                                                     <a class="dropdown-item deleteRecord" 
                                                         href="#" 
@@ -132,15 +134,15 @@
                     <div class="modal-body">
                         <form action="{{ route('form/holidays/update') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="id" id="e_id" value="">
+                            <input type="hidden" name="id" id="holiday_id">
                             <div class="form-group">
                                 <label>Holiday Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="holidayName_edit" name="holidayName" value="">
+                                <input type="text" class="form-control" id="holidayName_edit" name="holidayName">
                             </div>
                             <div class="form-group">
                                 <label>Holiday Date <span class="text-danger">*</span></label>
                                 <div class="cal-icon">
-                                    <input type="text" class="form-control datetimepicker" id="holidayDate_edit" name="holidayDate" value="">
+                                    <input type="text" class="form-control datetimepicker" id="holidayDate_edit" name="holidayDate">
                                 </div>
                             </div>
                             <div class="submit-section">
@@ -151,6 +153,7 @@
                 </div>
             </div>
         </div>
+
         <!-- /Edit Holiday Modal -->
 
         <!-- Delete Holiday Modal -->
@@ -184,16 +187,19 @@
     </div>
     <!-- /Page Wrapper -->
 @section('script')
+
     <!-- Update -->
     <script>
-        $(document).on('click','.userUpdate',function()
-        {
-            var _this = $(this).parents('tr');
-            $('#e_id').val(_this.find('.id').text());
-            $('#holidayName_edit').val(_this.find('.holidayName').text());
-            $('#holidayDate_edit').val(_this.find('.holidayDate').text());  
-        });
-    </script>
+$(document).on('click', '.userUpdate', function() {
+    var id = $(this).data('id');
+    var name = $(this).data('name');
+    var date = $(this).data('date');
+
+    $('#holiday_id').val(id);
+    $('#holidayName_edit').val(name);
+    $('#holidayDate_edit').val(date);
+});
+</script>
 
     <!-- Delete -->
     <script>

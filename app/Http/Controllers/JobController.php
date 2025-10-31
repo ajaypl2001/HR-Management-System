@@ -9,7 +9,7 @@ use App\Models\Question;
 use App\Models\AddJob;
 use Carbon\Carbon;
 use Response;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class JobController extends Controller
 {

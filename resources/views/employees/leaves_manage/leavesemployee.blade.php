@@ -3,18 +3,18 @@
 @section('content')
     <style>
         .select {
-            width: 100%; /* Make dropdowns responsive */
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-            background-color: white; /* Light background color */
-            color: #333; /* Text color */
-            transition: border-color 0.3s; /* Smooth transition for border color */
+            background-color: white;
+            color: #333;
+            transition: border-color 0.3s;
         }
         .select:focus {
-            border-color: red; /* Change border color on focus */
-            outline: none; /* Remove default outline */
+            border-color: red;
+            outline: none;
         }
     </style>
     <!-- Page Wrapper -->
@@ -546,9 +546,7 @@
     <!-- Edit Leave  -->
     <script>
         $(document).on('click', '.edit_leave', function() {
-            var _this = $(this).parents('tr');
-            
-            // Populate existing data into form fields
+            var _this = $(this).parents('tr'); 
             $('#e_id_record').val(_this.find('.id_record').text());
             $('#e_leave_type').val(_this.find('.leave_type').text()).change();
             $('#e_remaining_leave').val(_this.find('.remaining_leave').text());
@@ -557,18 +555,15 @@
             $('#e_number_of_day').val(_this.find('.number_of_day').text());
             $('#e_reason').val(_this.find('.reason').text());
     
-            // Function to create HTML for leave dates and leave days
             function appendLeaveData(targetSelectorDate, targetSelectorDay, leaveDateArray, leaveDayArray) {
                 let htmlDateContent = '';
                 let htmlDayContent = '';
                 let count = 1;
     
-                // Loop through both arrays simultaneously
                 for (let i = 0; i < leaveDateArray.length; i++) {
                     const leaveDate = leaveDateArray[i];
                     const leaveDay = leaveDayArray[i];
     
-                    // For Leave Dates
                     htmlDateContent += `
                         <div class="form-group">
                             <label><span class="text-danger">Leave Date ${count}</span></label>
@@ -577,8 +572,7 @@
                             </div>
                         </div>
                     `;
-    
-                    // For Leave Days (Select Dropdown)
+
                     htmlDayContent += `
                         <div class="form-group">
                             <label><span class="text-danger">Leave Day ${count}</span></label>
@@ -595,19 +589,14 @@
                     count++;
                 }
     
-                // Append generated HTML to target elements
                 $(targetSelectorDate).html(htmlDateContent);
                 $(targetSelectorDay).html(htmlDayContent);
     
-                // Attach change event listener to newly created dropdowns to recalculate total days
                 $('select[name="select_leave_day[]"]').change(calculateTotalDays);
             }
     
-            // Function to calculate total days
             function calculateTotalDays() {
-                let totalDays = $('#e_leave_dates_display .form-group').length; // Start with the total number of days
-    
-                // Adjust totalDays based on the selected leave types
+                let totalDays = $('#e_leave_dates_display .form-group').length; 
                 $('select[name="select_leave_day[]"]').each(function() {
                     const leaveType = $(this).val();
                     if (leaveType && leaveType.includes('Half-Day')) {
@@ -615,25 +604,19 @@
                     }
                 });
     
-                // Set the calculated total days back to the input
                 $('#e_number_of_day').val(totalDays);
             }
     
-            // Example of parsing JSON strings (if you already have the text in JSON format)
             var leaveDateJson = _this.find('.leave_date').text();
             var leaveDayJson  = _this.find('.leave_day').text();
     
-            var leaveDateArray = JSON.parse(leaveDateJson); // Parse to array
-            var leaveDayArray  = JSON.parse(leaveDayJson);   // Parse to array
+            var leaveDateArray = JSON.parse(leaveDateJson);
+            var leaveDayArray  = JSON.parse(leaveDayJson);
     
-            // Clear previous displays before appending new ones
             $('#e_leave_dates_display').empty();
             $('#e_select_leave_day').empty();
-    
-            // Append the data to the respective sections
             appendLeaveData('#e_leave_dates_display', '#e_select_leave_day', leaveDateArray, leaveDayArray);
     
-            // Initial calculation of total days
             calculateTotalDays();
         });
     </script>

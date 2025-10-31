@@ -29,11 +29,10 @@ class RegisterController extends Controller
 
     public function storeUser(Request $request)
     {
-    //  dd($request->all());
-      
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
+            'role_name'=> 'required',
             'password' => 'required|confirmed',
         ]);
         
@@ -41,11 +40,12 @@ class RegisterController extends Controller
         try {
             
             User::create([
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
+                'name'         => $validated['name'],
+                'email'        => $validated['email'],
                 'org_password' => $validated['password'],
-                'status' => 'Active',
-                'password' => Hash::make($validated['password']),
+                'role_name'    => $validated['role_name'],
+                'status'       => 'Active',
+                'password'     => Hash::make($validated['password']),
             ]);
            
 
